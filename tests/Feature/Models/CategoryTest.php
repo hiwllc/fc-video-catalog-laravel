@@ -6,10 +6,10 @@ use App\Models\Category;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
- * @TODO testar uuid na criação.
  * @TODO testar exclusão da categoria.
  */
 class CategoryTest extends TestCase
@@ -34,7 +34,9 @@ class CategoryTest extends TestCase
         ]);
 
         $category->refresh();
+        $isValidUuid = Str::isUuid($category->id);
 
+        $this->assertTrue($isValidUuid);
         $this->assertEquals('Category', $category->name);
         $this->assertNull($category->description);
         $this->assertTrue($category->is_active);
