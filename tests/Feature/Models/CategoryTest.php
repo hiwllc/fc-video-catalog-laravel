@@ -1,60 +1,84 @@
 <?php
 
-// namespace Tests\Feature\Models;
+namespace Tests\Feature\Models;
 
-// use App\Models\Category;
-// use Illuminate\Foundation\Testing\DatabaseMigrations;
-// use Illuminate\Foundation\Testing\RefreshDatabase;
-// use Illuminate\Foundation\Testing\WithFaker;
-// use Tests\TestCase;
+use App\Models\Category;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 /**
  * @TODO testar uuid na criação.
  * @TODO testar exclusão da categoria.
  */
-// class CategoryTest extends TestCase
-// {
-//     use DatabaseMigrations;
+class CategoryTest extends TestCase
+{
+    use DatabaseMigrations;
 
-//     public function testList()
-//     {
-//         factory(Category::class, 1)->create();
-//         $categories = Category::all();
+    public function testList()
+    {
+        factory(Category::class, 1)->create();
+        $categories = Category::all();
 
-//         $this->assertCount(1, $categories);
-//     }
+        $this->assertCount(1, $categories);
 
-//     public function testCreate()
-//     {
-//         $category = Category::create([
-//             'name' => 'Category'
-//         ]);
+        $categoryKeys = array_keys($categories->first()->getAttributes());
+        $this->assertEqualsCanonicalizing(['id', 'name', 'description', 'is_active', 'created_at', 'updated_at', 'deleted_at'], $categoryKeys);
+    }
 
-//         $category->refresh();
+    public function testCreate()
+    {
+        $category = Category::create([
+            'name' => 'Category'
+        ]);
 
-//         $this->assertEquals('Category', $category->name);
-//         $this->assertNull($category->description);
-//         $this->assertTrue($category->is_active);
-//     }
+        $category->refresh();
 
-//     public function testUpdate()
-//     {
-//         /** @var Category $category */
-//         $category = factory(Category::class)->create([
-//             'description' => 'test description',
-//             'is_active' => false,
-//         ])->first();
+        $this->assertEquals('Category', $category->name);
+        $this->assertNull($category->description);
+        $this->assertTrue($category->is_active);
 
-//         $data = [
-//             'name' => 'test name',
-//             'description' => 'test desc',
-//             'is_active' => true,
-//         ];
+        $category = Category::create([
+            'name' => 'Category',
+            'description' => null
+        ]);
 
-//         $category->update($data);
+        $this->assertNull($category->description);
 
-//         foreach($data as $key => $value) {
-//             $this->assertEquals($value, $category->{$key});
-//         }
-//     }
-// }
+        $category = Category::create([
+            'name' => 'Category',
+            'description' => 'category description'
+        ]);
+
+        $this->assertEquals('category description', $category->description);
+
+        $category = Category::create([
+            'name' => 'Category',
+            'is_active' => false
+        ]);
+
+        $this->assertFalse($category->is_active);
+    }
+
+    public function testUpdate()
+    {
+        /** @var Category $category */
+        $category = factory(Category::class)->create([
+            'description' => 'test description',
+            'is_active' => false,
+        ])->first();
+
+        $data = [
+            'name' => 'test name',
+            'description' => 'test desc',
+            'is_active' => true,
+        ];
+
+        $category->update($data);
+
+        foreach($data as $key => $value) {
+            $this->assertEquals($value, $category->{$key});
+        }
+    }
+}
