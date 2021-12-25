@@ -66,7 +66,7 @@ class CategoryTest extends TestCase
         $category = factory(Category::class)->create([
             'description' => 'test description',
             'is_active' => false,
-        ])->first();
+        ]);
 
         $data = [
             'name' => 'test name',
@@ -83,13 +83,12 @@ class CategoryTest extends TestCase
 
     public function testDelete()
     {
-        $categories = factory(Category::class)->create([
-            'description' => 'test description',
-            'is_active' => false,
-        ]);
+        $category = factory(Category::class)->create();
 
-        $categories->first()->delete();
+        $category->delete();
+        $this->assertNull(Category::find($category->id));
 
-        $this->assertCount(0, $categories->all());
+        $category->restore();
+        $this->assertNotNull(Category::find($category->id));
     }
 }
