@@ -9,9 +9,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-/**
- * @TODO testar exclusão da categoria.
- */
 class CategoryTest extends TestCase
 {
     use DatabaseMigrations;
@@ -82,5 +79,17 @@ class CategoryTest extends TestCase
         foreach($data as $key => $value) {
             $this->assertEquals($value, $category->{$key});
         }
+    }
+
+    public function testDelete()
+    {
+        $categories = factory(Category::class)->create([
+            'description' => 'test description',
+            'is_active' => false,
+        ]);
+
+        $categories->first()->delete();
+
+        $this->assertCount(0, $categories->all());
     }
 }
