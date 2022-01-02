@@ -20,7 +20,10 @@ class GenreController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        return Genre::create($request->all());
+        $genre = Genre::create($request->all());
+        $genre->refresh();
+
+        return $genre;
     }
 
     public function show(Genre $genre)
