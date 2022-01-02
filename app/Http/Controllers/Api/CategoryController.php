@@ -20,7 +20,10 @@ class CategoryController extends Controller
             'is_active' => 'boolean',
         ]);
 
-        return Category::create($request->all());
+        $category = Category::create($request->all());
+        $category->refresh();
+
+        return $category;
     }
 
     public function show(Category $category)
